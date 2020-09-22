@@ -1,0 +1,86 @@
+its probably better to run say a sum in sql than js so we don't have to deal with sorting algos, we dont have to pass data back and forth
+
+
+-- SELECT SUM("Quantity") from "OrderDetail"
+-- where "ProductId" = 11
+
+-- SELECT SUM("Quantity") AS "Total"
+-- FROM "OrderDetail"
+-- where "ProductId" = 11
+
+--total numbers of products ordered
+-- SELECT SUM("Quantity") AS "Total"
+-- FROM "OrderDetail"
+
+--total numbers each prod has been ordered
+-- SELECT "ProductId", SUM("Quantity") AS "Total"
+-- FROM "OrderDetail"
+-- GROUP BY "ProductId";
+
+
+-- SELECT "ProductId", SUM("Quantity") AS "Total"
+-- FROM "OrderDetail"
+-- GROUP BY "ProductId";
+
+
+--How many prods are in each categories
+SELECT "CategoryId", COUNT() "TotalProducts"
+FROM "Product"
+GROUP BY "CategoryId";
+
+join tables
+SELECT * FROM "OrderDetail"
+JOIN "Product" ON "OrderDetail"."ProductId"
+LIMIT 1
+
+--version1
+SELECT "OrderDetail"."Id", "OrderDetail"."Quantity", "Product"."ProductName"
+FROM "OrderDetail"
+JOIN "Product" ON "OrderDetail"."ProductId"="Product"."Id"
+LIMIT 1;
+
+--version2 // to shorten identifiers
+SELECT o."Id", o."Quantity", p."ProductName"
+FROM "OrderDetail" AS o
+JOIN "Product" AS p ON o."ProductId" = p."Id"
+LIMIT 1
+
+//Order's Employee first name and last name
+SELECT "Customer"."ContactName","Employee"."FirstName", "Employee"."LastName" 
+FROM "Order"
+JOIN "Employee" ON "Order"."EmployeeId"="Employee"."Id"
+JOIN "Customer" ON "Order"."CustomerId"="Customer"."Id"
+WHERE "Order"."Id"=16608
+
+
+//join first name and last name into one cell
+SELECT 
+"Customer"."ContactName" "CustomerName",
+"Employee"."FirstName" || " " || "Employee"."LastName" --concat ||
+FROM "Order"
+JOIN "Employee" ON "Order"."EmployeeId"="Employee"."Id"
+JOIN "Customer" ON "Order"."CustomerId"="Customer"."Id"
+
+
+//version 2 (much cleeaner)
+SELECT 
+"Customer"."ContactName" "CustomerName",
+e."FirstName" || " " || e."LastName" "EmployeeName"--concat ||
+FROM "Order"
+JOIN "Employee" AS e ON "Order"."EmployeeId"=e."Id"
+JOIN "Customer" ON "Order"."CustomerId"="Customer"."Id"
+WHERE "Order"."Id"=16608
+
+
+There's different types of joins
+by default we're using inner join
+
+SELECT 
+"Customer"."ContactName" "CustomerName",
+e."FirstName" || " " || e."LastName" "EmployeeName"--concat ||
+FROM "Order"
+LEFT JOIN "Employee" AS e ON "Order"."EmployeeId"=e."Id"
+JOIN "Customer" ON "Order"."CustomerId"="Customer"."Id"
+WHERE "Order"."Id"=16608
+
+//So employee and customer can be empty

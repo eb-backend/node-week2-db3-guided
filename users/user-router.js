@@ -1,7 +1,7 @@
 const express = require("express");
 
 const db = require("../data/db-config.js");
-
+const userModel = require("./user-model")
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -13,6 +13,7 @@ router.get("/", (req, res) => {
       res.status(500).json({ message: "Failed to get users" });
     });
 });
+
 
 router.get("/:id", (req, res) => {
   const { id } = req.params;
@@ -82,5 +83,26 @@ router.delete("/:id", (req, res) => {
       res.status(500).json({ message: "Failed to delete user" });
     });
 });
+
+
+// create an endpoint for listing a user's posts
+// add validateUserId() if there's middleware
+router.get("/users/:id/posts", async(req, res, next)=>{
+  try{
+     const posts = await userModel.findPostsByUserID(req.params.id)
+    //= await db("posts as p")
+    // //maybe add a user name from the user_id since it'll be more helpful
+    // .innerJoin("users as u", "u.id", "p.user_id")
+    // .where("p.user_id", req.params.id)
+    // // .where({"user_id": req.params.id}) //if you have multiple properties 
+    
+    // //? if we don't want the user_id added in there 
+    // .select("p.id", "p.contents", "u.username")
+res.json(posts)
+  }catch(err){
+    next(err)
+  }
+}
+)
 
 module.exports = router;

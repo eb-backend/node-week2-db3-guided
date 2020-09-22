@@ -8,6 +8,6 @@ const server = express();
 server.use(helmet());
 server.use(express.json());
 
-server.use("/api/users", UserRouter);
+server.use("/", UserRouter);
 
 module.exports = server;
